@@ -63,32 +63,21 @@ def extract_hashtags(text, stop_words=None):
 
 # Word Cloud Generator Section
 
+# Word Cloud Generator Section
+
 st.header("Word Cloud Generator")
 uploaded_txt_wc = st.file_uploader("Upload an optional text file for stop words (Word Cloud)", type="txt", accept_multiple_files=False)
 
 if st.button('Generate Word Cloud'):
-    if uploaded_csv is not None:
-        # Read CSV file
-        df = pd.read_csv(uploaded_csv)
-
-        # Define the URL of the stop words file on GitHub
-        stopwords_url = 'https://raw.githubusercontent.com/Adam0112/CT/main/stopwords.txt'
-
-        # Fetch the contents of the stop words file
-        response = requests.get(stopwords_url)
-
-        # Check if the request was successful (HTTP status code 200)
-        if response.status_code == 200:
-            # Extract the stop words as a set
-            custom_stop_words = set(response.text.splitlines())
-        else:
-            # If the request fails, use an empty set
-            custom_stop_words = set()
+    if uploaded_txt_wc is not None:  # Fix: Check if the text file is uploaded
+        # Read text file
+        custom_stop_words = set(uploaded_txt_wc.getvalue().decode("utf-8").splitlines())
 
         # Combine NLTK's English stopwords with custom stop words
         stop_words = set(stopwords.words('english')).union(custom_stop_words)
 
-        # Apply cleaning function
+        # Assuming you have a DataFrame named df with a 'Message' column
+        # If not, replace 'Message' with the actual column name containing text
         df['cleaned_text'] = df['Message'].apply(lambda x: clean_text(x, stop_words))
 
         # Generate word cloud
@@ -101,9 +90,52 @@ if st.button('Generate Word Cloud'):
         ax.axis('off')
         st.pyplot(fig)
     else:
-        st.write("Please upload a CSV file to generate the word cloud.")
+        st.write("Please upload a TXT file to generate the word cloud.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
+
+
+# st.header("Word Cloud Generator")
+# uploaded_txt_wc = st.file_uploader("Upload an optional text file for stop words (Word Cloud)", type="txt", accept_multiple_files=False)
+
+# if st.button('Generate Word Cloud'):
+#     if uploaded_csv is not None:
+#         # Read CSV file
+#         df = pd.read_csv(uploaded_csv)
+
+#         # Define the URL of the stop words file on GitHub
+#         stopwords_url = 'https://raw.githubusercontent.com/Adam0112/CT/main/stopwords.txt'
+
+#         # Fetch the contents of the stop words file
+#         response = requests.get(stopwords_url)
+
+#         # Check if the request was successful (HTTP status code 200)
+#         if response.status_code == 200:
+#             # Extract the stop words as a set
+#             custom_stop_words = set(response.text.splitlines())
+#         else:
+#             # If the request fails, use an empty set
+#             custom_stop_words = set()
+
+#         # Combine NLTK's English stopwords with custom stop words
+#         stop_words = set(stopwords.words('english')).union(custom_stop_words)
+
+#         # Apply cleaning function
+#         df['cleaned_text'] = df['Message'].apply(lambda x: clean_text(x, stop_words))
+
+#         # Generate word cloud
+#         all_text = ' '.join(df['cleaned_text'])
+#         wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_text)
+
+#         # Display word cloud
+#         fig, ax = plt.subplots()
+#         ax.imshow(wordcloud, interpolation='bilinear')
+#         ax.axis('off')
+#         st.pyplot(fig)
+#     else:
+#         st.write("Please upload a CSV file to generate the word cloud.")
+
+# st.markdown("<br><br>", unsafe_allow_html=True)
 
 # Hashtag Extraction Section
 st.header("Extract Hashtags")
