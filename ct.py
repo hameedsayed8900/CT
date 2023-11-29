@@ -70,8 +70,8 @@ if st.button('Generate Word Cloud'):
 
         # Create a sample DataFrame (replace this with your actual data loading logic)
         # For demonstration purposes, I'm creating a DataFrame with a 'Message' column
-        data = {'Message': ["This is a sample text.", "Another sample text."]}
-        df = pd.DataFrame(data)
+        # data = {'Message': ["This is a sample text.", "Another sample text."]}
+        # df = pd.DataFrame(data)
 
         # Combine NLTK's English stopwords with custom stop words
         stop_words = set(stopwords.words('english')).union(custom_stop_words)
