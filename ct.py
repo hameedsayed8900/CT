@@ -354,75 +354,75 @@ if st.button('Extract Hashtags'):
 st.markdown("<br><br>", unsafe_allow_html=True)
 
 # Time Series Analysis Section
-# st.header("Time Series Analysis of Engagement")
+st.header("Time Series Analysis of Engagement")
 
-# # Allow user to specify the interval
-# interval = st.slider("Select the Interval", min_value=1, max_value=30, value=7)
+# Allow user to specify the interval
+interval = st.slider("Select the Interval", min_value=1, max_value=30, value=7)
 
-# if st.button('Analyse Time Series Engagement'):
-#     if uploaded_csv is not None:
-#         # Read CSV file
-#         df = pd.read_csv(uploaded_csv).copy()
-
-#         # Convert the 'Post Created Date' column to datetime
-#         df['Post Created Date'] = pd.to_datetime(df['Post Created Date'], errors='coerce')
-
-#         # Handling missing values (if any)
-#         df.fillna(0, inplace=True)
-
-#         # Aggregating the data by the specified interval
-#         daily_data = df.groupby(df['Post Created Date'].dt.date).sum()
-#         daily_data.fillna(0, inplace=True)
-
-#         # Plotting time series for all engagement metrics in one graph
-#         plt.figure(figsize=(15, 8))
-
-#         metrics = ['Likes', 'Comments', 'Shares', 'Love', 'Sad', 'Angry']
-#         for metric in metrics:
-#             sns.lineplot(data=daily_data, x=daily_data.index, y=metric, label=metric)
-
-#         plt.title('Facebook Post Engagement Over Time')
-#         plt.ylabel('Count')
-#         plt.xlabel('Date')
-
-#         # Set x-axis to show more dates based on the selected interval
-#         ax = plt.gca()
-#         ax.xaxis.set_major_locator(mdates.DayLocator(interval=interval))
-#         ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-#         plt.xticks(rotation=45)
-#         plt.legend(title='Engagement Types')
-#         plt.grid(True)
-#         plt.tight_layout()
-#         st.pyplot(plt)
-#     else:
-#         st.write("Please upload a CSV file to analyze time series engagement.")
-
-# Hourly Distribution Analysis
-st.markdown("<br><br>", unsafe_allow_html=True)
-
-st.header("Post Distribution by Hour")
-
-if st.button('Analyse Hourly Post Distribution'):
+if st.button('Analyse Time Series Engagement'):
     if uploaded_csv is not None:
         # Read CSV file
         df = pd.read_csv(uploaded_csv).copy()
-        # Parse the "Post Created Time" and extract hour
-        df['Hour'] = pd.to_datetime(df['Post Created Time'], format='%H:%M:%S').dt.hour
 
-        # Count posts in each hour
-        hourly_counts = df['Hour'].value_counts().sort_index()
+        # Convert the 'Post Created Date' column to datetime
+        df['Post Created Date'] = pd.to_datetime(df['Post Created Date'], errors='coerce')
 
-        # Plotting
-        plt.figure(figsize=(12, 6))
-        ax = hourly_counts.plot(kind='bar', zorder=3)
-        plt.title('Facebook Posts Distribution by Hour of the Day')
-        plt.xlabel('Hour of the Day')
-        plt.ylabel('Number of Posts')
-        plt.xticks(range(24), [f'{hour:02d}:00' for hour in range(24)], rotation=45)
-        plt.grid(True, zorder=0)
+        # Handling missing values (if any)
+        df.fillna(0, inplace=True)
+
+        # Aggregating the data by the specified interval
+        daily_data = df.groupby(df['Post Created Date'].dt.date).sum()
+        daily_data.fillna(0, inplace=True)
+
+        # Plotting time series for all engagement metrics in one graph
+        plt.figure(figsize=(15, 8))
+
+        metrics = ['Likes', 'Comments', 'Shares', 'Love', 'Sad', 'Angry']
+        for metric in metrics:
+            sns.lineplot(data=daily_data, x=daily_data.index, y=metric, label=metric)
+
+        plt.title('Facebook Post Engagement Over Time')
+        plt.ylabel('Count')
+        plt.xlabel('Date')
+
+        # Set x-axis to show more dates based on the selected interval
+        ax = plt.gca()
+        ax.xaxis.set_major_locator(mdates.DayLocator(interval=interval))
+        ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+        plt.xticks(rotation=45)
+        plt.legend(title='Engagement Types')
+        plt.grid(True)
+        plt.tight_layout()
         st.pyplot(plt)
     else:
-        st.write("Please upload a CSV file.")
+        st.write("Please upload a CSV file to analyze time series engagement.")
+
+# Hourly Distribution Analysis
+# st.markdown("<br><br>", unsafe_allow_html=True)
+
+# st.header("Post Distribution by Hour")
+
+# if st.button('Analyse Hourly Post Distribution'):
+#     if uploaded_csv is not None:
+#         # Read CSV file
+#         df = pd.read_csv(uploaded_csv).copy()
+#         # Parse the "Post Created Time" and extract hour
+#         df['Hour'] = pd.to_datetime(df['Post Created Time'], format='%H:%M:%S').dt.hour
+
+#         # Count posts in each hour
+#         hourly_counts = df['Hour'].value_counts().sort_index()
+
+#         # Plotting
+#         plt.figure(figsize=(12, 6))
+#         ax = hourly_counts.plot(kind='bar', zorder=3)
+#         plt.title('Facebook Posts Distribution by Hour of the Day')
+#         plt.xlabel('Hour of the Day')
+#         plt.ylabel('Number of Posts')
+#         plt.xticks(range(24), [f'{hour:02d}:00' for hour in range(24)], rotation=45)
+#         plt.grid(True, zorder=0)
+#         st.pyplot(plt)
+#     else:
+#         st.write("Please upload a CSV file.")
 
 if st.button('Analyse Hourly Post Distribution'):
     if uploaded_csv is not None:
