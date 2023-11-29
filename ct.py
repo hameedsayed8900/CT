@@ -121,7 +121,7 @@ if st.button('Extract Hashtags'):
             hashtag_stop_words = set(uploaded_txt_hashtags.getvalue().decode().splitlines())
 
         # Extract and visualize hashtags
-        hashtags_list = df['text'].apply(lambda x: extract_hashtags(x, hashtag_stop_words)).explode()
+        hashtags_list = df['Message'].apply(lambda x: extract_hashtags(x, hashtag_stop_words)).explode()
         top_hashtags = hashtags_list.value_counts().nlargest(number_of_hashtags)
 
         if not top_hashtags.empty:
