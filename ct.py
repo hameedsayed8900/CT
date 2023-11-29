@@ -106,17 +106,7 @@ import re
 from io import StringIO
 import requests  
 
-import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import nltk
-nltk.download('stopwords')
-from nltk.corpus import stopwords
-from wordcloud import WordCloud
-import re
 
-# Download NLTK data if not already downloaded
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
@@ -146,6 +136,9 @@ st.markdown("<h1 class='centered-title'>CrowdTangle Analysis</h1>", unsafe_allow
 # File uploader for the CSV file
 uploaded_csv = st.file_uploader("Upload a CSV file", type="csv")
 
+# File uploader for optional stop words
+uploaded_txt_wc = st.file_uploader("Upload an optional text file for stop words (Word Cloud)", type="txt", accept_multiple_files=False)
+
 # Function to clean text
 def clean_text(text, stop_words=None):
     if not isinstance(text, str):
@@ -169,7 +162,6 @@ def extract_hashtags(text, stop_words=None):
 # Word Cloud Generator Section
 
 st.header("Word Cloud Generator")
-uploaded_txt_wc = st.file_uploader("Upload an optional text file for stop words (Word Cloud)", type="txt", accept_multiple_files=False)
 
 if st.button('Generate Word Cloud'):
     if uploaded_csv is not None:  # Check if the CSV file is uploaded
@@ -186,22 +178,114 @@ if st.button('Generate Word Cloud'):
 
             # Assuming you have a DataFrame named df with a 'Message' column
             df['cleaned_text'] = df['Message'].apply(lambda x: clean_text(x, stop_words))
-
-            # Generate word cloud
-            all_text = ' '.join(df['cleaned_text'])
-            wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_text)
-
-            # Display word cloud
-            fig, ax = plt.subplots()
-            ax.imshow(wordcloud, interpolation='bilinear')
-            ax.axis('off')
-            st.pyplot(fig)
         else:
-            st.write("Please upload a TXT file to generate the word cloud.")
+            # No additional stop words provided, use only NLTK's English stopwords
+            stop_words = set(stopwords.words('english'))
+
+            # Assuming you have a DataFrame named df with a 'Message' column
+            df['cleaned_text'] = df['Message'].apply(lambda x: clean_text(x, stop_words))
+
+        # Generate word cloud
+        all_text = ' '.join(df['cleaned_text'])
+        wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_text)
+
+        # Display word cloud
+        fig, ax = plt.subplots()
+        ax.imshow(wordcloud, interpolation='bilinear')
+        ax.axis('off')
+        st.pyplot(fig)
     else:
         st.write("Please upload a CSV file to generate the word cloud.")
 
 st.markdown("<br><br>", unsafe_allow_html=True)
+
+
+# # Download NLTK data if not already downloaded
+# try:
+#     nltk.data.find('tokenizers/punkt')
+# except LookupError:
+#     nltk.download('punkt')
+
+# # Streamlit page configuration
+# st.set_page_config(page_title="Welcome to CrowdTangle Analyser", layout="wide")
+
+# # CSS for centering the title and customizing its style
+# st.markdown(
+#     """
+#     <style>
+#     .centered-title {
+#         text-align: center;
+#         font-size: 50px; /* Adjust the font size as needed */
+#         color: skyblue; /* Change the font color to sky blue */
+#         margin-bottom: 20px; /* Add some spacing below the title */
+#     }
+#     </style>
+#     """,
+#     unsafe_allow_html=True,
+# )
+
+# # Title of the app
+# st.markdown("<h1 class='centered-title'>CrowdTangle Analysis</h1>", unsafe_allow_html=True)
+
+# # File uploader for the CSV file
+# uploaded_csv = st.file_uploader("Upload a CSV file", type="csv")
+
+# # Function to clean text
+# def clean_text(text, stop_words=None):
+#     if not isinstance(text, str):
+#         return ''
+#     text = ''.join([char.lower() for char in text if char.isalnum() or char.isspace()])
+#     if stop_words:
+#         text = ' '.join([word for word in text.split() if word not in stop_words])
+#     return text
+
+# # Function to extract hashtags
+# def extract_hashtags(text, stop_words=None):
+#     if not isinstance(text, str):
+#         return []
+#     hashtags = re.findall(r'#\w+', text)
+#     if stop_words:
+#         filtered_hashtags = [hashtag for hashtag in hashtags if hashtag not in stop_words]
+#     else:
+#         filtered_hashtags = hashtags
+#     return filtered_hashtags
+
+# # Word Cloud Generator Section
+
+# st.header("Word Cloud Generator")
+# uploaded_txt_wc = st.file_uploader("Upload an optional text file for stop words (Word Cloud)", type="txt", accept_multiple_files=False)
+
+# if st.button('Generate Word Cloud'):
+#     if uploaded_csv is not None:  # Check if the CSV file is uploaded
+#         # Read CSV file
+#         df = pd.read_csv(uploaded_csv)
+
+#         # Check if the text file is uploaded
+#         if uploaded_txt_wc is not None:
+#             # Read text file
+#             custom_stop_words = set(uploaded_txt_wc.getvalue().decode("utf-8").splitlines())
+
+#             # Combine NLTK's English stopwords with custom stop words
+#             stop_words = set(stopwords.words('english')).union(custom_stop_words)
+
+#             # Assuming you have a DataFrame named df with a 'Message' column
+#             df['cleaned_text'] = df['Message'].apply(lambda x: clean_text(x, stop_words))
+
+#             # Generate word cloud
+#             all_text = ' '.join(df['cleaned_text'])
+#             wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_text)
+
+#             # Display word cloud
+#             fig, ax = plt.subplots()
+#             ax.imshow(wordcloud, interpolation='bilinear')
+#             ax.axis('off')
+#             st.pyplot(fig)
+#         else:
+#             st.write("Please upload a TXT file to generate the word cloud.")
+#     else:
+#         st.write("Please upload a CSV file to generate the word cloud.")
+
+# st.markdown("<br><br>", unsafe_allow_html=True)
 
 # # Download NLTK data if not already downloaded
 # try:
