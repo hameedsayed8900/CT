@@ -398,61 +398,61 @@ if st.button('Analyse Time Series Engagement'):
         st.write("Please upload a CSV file to analyze time series engagement.")
 
 # Hourly Distribution Analysis
-# st.markdown("<br><br>", unsafe_allow_html=True)
+st.markdown("<br><br>", unsafe_allow_html=True)
 
-# st.header("Post Distribution by Hour")
-
-# if st.button('Analyse Hourly Post Distribution'):
-#     if uploaded_csv is not None:
-#         # Read CSV file
-#         df = pd.read_csv(uploaded_csv).copy()
-#         # Parse the "Post Created Time" and extract hour
-#         df['Hour'] = pd.to_datetime(df['Post Created Time'], format='%H:%M:%S').dt.hour
-
-#         # Count posts in each hour
-#         hourly_counts = df['Hour'].value_counts().sort_index()
-
-#         # Plotting
-#         plt.figure(figsize=(12, 6))
-#         ax = hourly_counts.plot(kind='bar', zorder=3)
-#         plt.title('Facebook Posts Distribution by Hour of the Day')
-#         plt.xlabel('Hour of the Day')
-#         plt.ylabel('Number of Posts')
-#         plt.xticks(range(24), [f'{hour:02d}:00' for hour in range(24)], rotation=45)
-#         plt.grid(True, zorder=0)
-#         st.pyplot(plt)
-#     else:
-#         st.write("Please upload a CSV file.")
+st.header("Post Distribution by Hour")
 
 if st.button('Analyse Hourly Post Distribution'):
     if uploaded_csv is not None:
-        try:
-            # Read CSV file
-            df = pd.read_csv(uploaded_csv).copy()
+        # Read CSV file
+        df = pd.read_csv(uploaded_csv).copy()
+        # Parse the "Post Created Time" and extract hour
+        df['Hour'] = pd.to_datetime(df['Post Created Time'], format='%H:%M:%S').dt.hour
 
-            # Check for missing values in 'Post Created Time'
-            if df['Post Created Time'].isnull().any():
-                st.write("Error: Missing values in 'Post Created Time' column.")
-            else:
-                # Parse the "Post Created Time" and extract hour
-                df['Hour'] = pd.to_datetime(df['Post Created Time'], format='%H:%M:%S').dt.hour
+        # Count posts in each hour
+        hourly_counts = df['Hour'].value_counts().sort_index()
 
-                # Count posts in each hour
-                hourly_counts = df['Hour'].value_counts().sort_index()
-
-                # Plotting
-                plt.figure(figsize=(12, 6))
-                ax = hourly_counts.plot(kind='bar', zorder=3)
-                plt.title('Facebook Posts Distribution by Hour of the Day')
-                plt.xlabel('Hour of the Day')
-                plt.ylabel('Number of Posts')
-                plt.xticks(range(24), [f'{hour:02d}:00' for hour in range(24)], rotation=45)
-                plt.grid(True, zorder=0)
-                st.pyplot(plt)
-        except Exception as e:
-            st.write(f"Error: {e}")
+        # Plotting
+        plt.figure(figsize=(12, 6))
+        ax = hourly_counts.plot(kind='bar', zorder=3)
+        plt.title('Facebook Posts Distribution by Hour of the Day')
+        plt.xlabel('Hour of the Day')
+        plt.ylabel('Number of Posts')
+        plt.xticks(range(24), [f'{hour:02d}:00' for hour in range(24)], rotation=45)
+        plt.grid(True, zorder=0)
+        st.pyplot(plt)
     else:
         st.write("Please upload a CSV file.")
+
+# if st.button('Analyse Hourly Post Distribution'):
+#     if uploaded_csv is not None:
+#         try:
+#             # Read CSV file
+#             df = pd.read_csv(uploaded_csv).copy()
+
+#             # Check for missing values in 'Post Created Time'
+#             if df['Post Created Time'].isnull().any():
+#                 st.write("Error: Missing values in 'Post Created Time' column.")
+#             else:
+#                 # Parse the "Post Created Time" and extract hour
+#                 df['Hour'] = pd.to_datetime(df['Post Created Time'], format='%H:%M:%S').dt.hour
+
+#                 # Count posts in each hour
+#                 hourly_counts = df['Hour'].value_counts().sort_index()
+
+#                 # Plotting
+#                 plt.figure(figsize=(12, 6))
+#                 ax = hourly_counts.plot(kind='bar', zorder=3)
+#                 plt.title('Facebook Posts Distribution by Hour of the Day')
+#                 plt.xlabel('Hour of the Day')
+#                 plt.ylabel('Number of Posts')
+#                 plt.xticks(range(24), [f'{hour:02d}:00' for hour in range(24)], rotation=45)
+#                 plt.grid(True, zorder=0)
+#                 st.pyplot(plt)
+#         except Exception as e:
+#             st.write(f"Error: {e}")
+#     else:
+#         st.write("Please upload a CSV file.")
 
 # st.header("Posting Time")
 
