@@ -71,8 +71,8 @@ if st.button('Generate Word Cloud'):
         # Read CSV file
         df = pd.read_csv(uploaded_csv)
 
-        # Define the URL of the stop words file on GitHub
-        stopwords_url = 'https://raw.githubusercontent.com/Adam0112/CT/main/stopwords.txt'
+        # # Define the URL of the stop words file on GitHub
+        # stopwords_url = 'https://raw.githubusercontent.com/Adam0112/CT/main/stopwords.txt'
 
         # Fetch the contents of the stop words file
         response = requests.get(stopwords_url)
@@ -89,7 +89,7 @@ if st.button('Generate Word Cloud'):
         stop_words = set(stopwords.words('english')).union(custom_stop_words)
 
         # Apply cleaning function
-        df['cleaned_text'] = df['text'].apply(lambda x: clean_text(x, stop_words))
+        df['cleaned_text'] = df['Message'].apply(lambda x: clean_text(x, stop_words))
 
         # Generate word cloud
         all_text = ' '.join(df['cleaned_text'])
