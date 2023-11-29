@@ -1,98 +1,3 @@
-# import streamlit as st
-# import pandas as pd
-# import matplotlib.pyplot as plt
-# import seaborn as sns
-# import nltk
-# nltk.download('stopwords')
-# from nltk.corpus import stopwords
-# from wordcloud import WordCloud
-# import re
-
-# # Download NLTK data if not already downloaded
-# try:
-#     nltk.data.find('tokenizers/punkt')
-# except LookupError:
-#     nltk.download('punkt')
-
-# # Streamlit page configuration
-# st.set_page_config(page_title="Welcome to CrowdTangle Analyser", layout="wide")
-
-# # CSS for centering the title and customizing its style
-# st.markdown(
-#     """
-#     <style>
-#     .centered-title {
-#         text-align: center;
-#         font-size: 50px; /* Adjust the font size as needed */
-#         color: skyblue; /* Change the font color to sky blue */
-#         margin-bottom: 20px; /* Add some spacing below the title */
-#     }
-#     </style>
-#     """,
-#     unsafe_allow_html=True,
-# )
-
-# # Title of the app
-# st.markdown("<h1 class='centered-title'>CrowdTangle Analysis</h1>", unsafe_allow_html=True)
-
-# # File uploader for the CSV file
-# uploaded_csv = st.file_uploader("Upload a CSV file", type="csv")
-
-# # Function to clean text
-# def clean_text(text, stop_words=None):
-#     if not isinstance(text, str):
-#         return ''
-#     text = ''.join([char.lower() for char in text if char.isalnum() or char.isspace()])
-#     if stop_words:
-#         text = ' '.join([word for word in text.split() if word not in stop_words])
-#     return text
-
-# # Function to extract hashtags
-# def extract_hashtags(text, stop_words=None):
-#     if not isinstance(text, str):
-#         return []
-#     hashtags = re.findall(r'#\w+', text)
-#     if stop_words:
-#         filtered_hashtags = [hashtag for hashtag in hashtags if hashtag not in stop_words]
-#     else:
-#         filtered_hashtags = hashtags
-#     return filtered_hashtags
-
-# # Word Cloud Generator Section
-
-# st.header("Word Cloud Generator")
-# uploaded_txt_wc = st.file_uploader("Upload an optional text file for stop words (Word Cloud)", type="txt", accept_multiple_files=False)
-
-# if st.button('Generate Word Cloud'):
-#     if uploaded_txt_wc is not None:  # Fix: Check if the text file is uploaded
-#         # Read text file
-#         custom_stop_words = set(uploaded_txt_wc.getvalue().decode("utf-8").splitlines())
-
-#         # Create a sample DataFrame (replace this with your actual data loading logic)
-#         # For demonstration purposes, I'm creating a DataFrame with a 'Message' column
-#         # data = {'Message': ["This is a sample text.", "Another sample text."]}
-#         # df = pd.DataFrame(data)
-
-#         # Combine NLTK's English stopwords with custom stop words
-#         stop_words = set(stopwords.words('english')).union(custom_stop_words)
-
-#         # Assuming you have a DataFrame named df with a 'Message' column
-#         df['cleaned_text'] = df['Message'].apply(lambda x: clean_text(x, stop_words))
-
-#         # Generate word cloud
-#         all_text = ' '.join(df['cleaned_text'])
-#         wordcloud = WordCloud(width=800, height=400, background_color='white').generate(all_text)
-
-#         # Display word cloud
-#         fig, ax = plt.subplots()
-#         ax.imshow(wordcloud, interpolation='bilinear')
-#         ax.axis('off')
-#         st.pyplot(fig)
-#     else:
-#         st.write("Please upload a TXT file to generate the word cloud.")
-
-# st.markdown("<br><br>", unsafe_allow_html=True)
-
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -449,75 +354,75 @@ if st.button('Extract Hashtags'):
 st.markdown("<br><br>", unsafe_allow_html=True)
 
 # Time Series Analysis Section
-st.header("Time Series Analysis of Engagement")
+# st.header("Time Series Analysis of Engagement")
 
-# Allow user to specify the interval
-interval = st.slider("Select the Interval", min_value=1, max_value=30, value=7)
+# # Allow user to specify the interval
+# interval = st.slider("Select the Interval", min_value=1, max_value=30, value=7)
 
-if st.button('Analyse Time Series Engagement'):
-    if uploaded_csv is not None:
-        # Read CSV file
-        df = pd.read_csv(uploaded_csv).copy()
+# if st.button('Analyse Time Series Engagement'):
+#     if uploaded_csv is not None:
+#         # Read CSV file
+#         df = pd.read_csv(uploaded_csv).copy()
 
-        # Convert the 'Post Created Date' column to datetime
-        df['Post Created Date'] = pd.to_datetime(df['Post Created Date'], errors='coerce')
+#         # Convert the 'Post Created Date' column to datetime
+#         df['Post Created Date'] = pd.to_datetime(df['Post Created Date'], errors='coerce')
 
-        # Handling missing values (if any)
-        df.fillna(0, inplace=True)
+#         # Handling missing values (if any)
+#         df.fillna(0, inplace=True)
 
-        # Aggregating the data by the specified interval
-        daily_data = df.groupby(df['Post Created Date'].dt.date).sum()
-        daily_data.fillna(0, inplace=True)
+#         # Aggregating the data by the specified interval
+#         daily_data = df.groupby(df['Post Created Date'].dt.date).sum()
+#         daily_data.fillna(0, inplace=True)
 
-        # Plotting time series for all engagement metrics in one graph
-        plt.figure(figsize=(15, 8))
+#         # Plotting time series for all engagement metrics in one graph
+#         plt.figure(figsize=(15, 8))
 
-        metrics = ['Likes', 'Comments', 'Shares', 'Love', 'Sad', 'Angry']
-        for metric in metrics:
-            sns.lineplot(data=daily_data, x=daily_data.index, y=metric, label=metric)
+#         metrics = ['Likes', 'Comments', 'Shares', 'Love', 'Sad', 'Angry']
+#         for metric in metrics:
+#             sns.lineplot(data=daily_data, x=daily_data.index, y=metric, label=metric)
 
-        plt.title('Facebook Post Engagement Over Time')
-        plt.ylabel('Count')
-        plt.xlabel('Date')
+#         plt.title('Facebook Post Engagement Over Time')
+#         plt.ylabel('Count')
+#         plt.xlabel('Date')
 
-        # Set x-axis to show more dates based on the selected interval
-        ax = plt.gca()
-        ax.xaxis.set_major_locator(mdates.DayLocator(interval=interval))
-        ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
-        plt.xticks(rotation=45)
-        plt.legend(title='Engagement Types')
-        plt.grid(True)
-        plt.tight_layout()
-        st.pyplot(plt)
-    else:
-        st.write("Please upload a CSV file to analyze time series engagement.")
+#         # Set x-axis to show more dates based on the selected interval
+#         ax = plt.gca()
+#         ax.xaxis.set_major_locator(mdates.DayLocator(interval=interval))
+#         ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+#         plt.xticks(rotation=45)
+#         plt.legend(title='Engagement Types')
+#         plt.grid(True)
+#         plt.tight_layout()
+#         st.pyplot(plt)
+#     else:
+#         st.write("Please upload a CSV file to analyze time series engagement.")
 
 # Hourly Distribution Analysis
 st.markdown("<br><br>", unsafe_allow_html=True)
 
-# st.header("Post Distribution by Hour")
+st.header("Post Distribution by Hour")
 
-# if st.button('Analyse Hourly Post Distribution'):
-#     if uploaded_csv is not None:
-#         # Read CSV file
-#         df = pd.read_csv(uploaded_csv).copy()
-#         # Parse the "Post Created Time" and extract hour
-#         df['Hour'] = pd.to_datetime(df['Post Created Time'], format='%H:%M:%S').dt.hour
+if st.button('Analyse Hourly Post Distribution'):
+    if uploaded_csv is not None:
+        # Read CSV file
+        df = pd.read_csv(uploaded_csv).copy()
+        # Parse the "Post Created Time" and extract hour
+        df['Hour'] = pd.to_datetime(df['Post Created Time'], format='%H:%M:%S').dt.hour
 
-#         # Count posts in each hour
-#         hourly_counts = df['Hour'].value_counts().sort_index()
+        # Count posts in each hour
+        hourly_counts = df['Hour'].value_counts().sort_index()
 
-#         # Plotting
-#         plt.figure(figsize=(12, 6))
-#         ax = hourly_counts.plot(kind='bar', zorder=3)
-#         plt.title('Facebook Posts Distribution by Hour of the Day')
-#         plt.xlabel('Hour of the Day')
-#         plt.ylabel('Number of Posts')
-#         plt.xticks(range(24), [f'{hour:02d}:00' for hour in range(24)], rotation=45)
-#         plt.grid(True, zorder=0)
-#         st.pyplot(plt)
-#     else:
-#         st.write("Please upload a CSV file.")
+        # Plotting
+        plt.figure(figsize=(12, 6))
+        ax = hourly_counts.plot(kind='bar', zorder=3)
+        plt.title('Facebook Posts Distribution by Hour of the Day')
+        plt.xlabel('Hour of the Day')
+        plt.ylabel('Number of Posts')
+        plt.xticks(range(24), [f'{hour:02d}:00' for hour in range(24)], rotation=45)
+        plt.grid(True, zorder=0)
+        st.pyplot(plt)
+    else:
+        st.write("Please upload a CSV file.")
 
 if st.button('Analyse Hourly Post Distribution'):
     if uploaded_csv is not None:
